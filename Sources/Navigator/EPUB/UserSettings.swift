@@ -18,7 +18,7 @@ public class UserSettings {
     
     // WARNING: String values must not contain any single or double quotes characters, otherwise it breaks the streamer's injection.
     private let appearanceValues = ["readium-default-on", "readium-sepia-on","readium-night-on"]
-    private let fontFamilyValues = ["Original", "Helvetica Neue", "Iowan Old Style", "Athelas", "Seravek", "OpenDyslexic", "AccessibleDfA", "IA Writer Duospace"]
+    private let fontFamilyValues = ["Original", "Sarabun"]
     private let textAlignmentValues = ["justify", "start"]
     private let columnCountValues = ["auto", "1", "2"]
     
@@ -93,9 +93,9 @@ public class UserSettings {
         textAlignment: Int = 0,
         columnCount: Int = 0,
         wordSpacing: Float = 0,
-        letterSpacing: Float = 0,
+        letterSpacing: Float = 0.04,
         pageMargins: Float = 1,
-        lineHeight: Float = 1.5,
+        lineHeight: Float = 1.8,
         paragraphMargins: Float? = nil,
         textColor: String? = nil,
         backgroundColor: String? = nil
@@ -307,8 +307,8 @@ public class UserSettings {
         // Letter spacing
         userProperties.addIncrementable(nValue: letterSpacing,
                                         min: 0,
-                                        max: 0.25,
-                                        step: 0.0625,
+                                        max: 0.26,
+                                        step: 0.04,
                                         suffix: "em",
                                         reference: ReadiumCSSReference.letterSpacing.rawValue,
                                         name: ReadiumCSSName.letterSpacing.rawValue)
