@@ -60,12 +60,11 @@ final class EPUBHTMLInjector {
                     content = addRTLDir(to: "body", in: content)
                 }
             }
-
             if isReflowable, let headStart = content.endIndex(of: "<head>") {
                 content = content.insert(string: """
                     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0;"/>
                     <style type="text/css">@font-face{font-family: "OpenDyslexic"; src:url("/fonts/OpenDyslexic-Regular.otf") format("opentype");}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Sarabun'); @font-face{font-family: 'Sarabun', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css?family=PT+Serif%7CRoboto%7CSource+Sans+Pro%7CVollkorn%7CCordia+New%7CNoto%7CNoto+Sans+Thai%7CSarabun%7CChakra+Petch%7CMali%7CMaitree%7CTaviraj%7CTrirong%7CKodchasan%7C'); @font-face{font-family: 'Sarabun', 'Chakra Petch', 'Mali', 'Maitree', 'Taviraj', 'Trirong', 'Kodchasan', sans-serif;}</style>
                 """, at: headStart)
             }
             
