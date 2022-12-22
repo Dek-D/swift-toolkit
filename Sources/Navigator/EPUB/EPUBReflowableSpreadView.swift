@@ -365,7 +365,7 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
             })();
             """
         )
-         webView.evaluateJavaScript("document.body.style.userSelect='none';")
+         webView.evaluateJavaScript("document.documentElement.style.webkitUserSelect='none'")
         
         // Fixes https://github.com/readium/r2-navigator-swift/issues/141 by disabling the native
         // double-tap gesture.
