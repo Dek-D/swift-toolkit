@@ -64,13 +64,13 @@ final class EPUBHTMLInjector {
                 content = content.insert(string: """
                     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0;"/>
                     <style type="text/css">@font-face{font-family: "OpenDyslexic"; src:url("/fonts/OpenDyslexic-Regular.otf") format("opentype");}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Sarabun'); @font-face{font-family: 'Sarabun', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Chakra+Petch'); @font-face{font-family: 'Chakra Petch', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Mali'); @font-face{font-family: 'Mali', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Maitree'); @font-face{font-family: 'Maitree', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Taviraj'); @font-face{font-family: 'Taviraj', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Trirong'); @font-face{font-family: 'Trirong', sans-serif;}</style>
-                    <style type="text/css">@import url('//fonts.googleapis.com/css2?family=Kodchasan'); @font-face{font-family: 'Kodchasan', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Sarabun'); @font-face{font-family: 'Sarabun', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch'); @font-face{font-family: 'Chakra Petch', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Mali'); @font-face{font-family: 'Mali', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Maitree'); @font-face{font-family: 'Maitree', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Taviraj'); @font-face{font-family: 'Taviraj', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Trirong'); @font-face{font-family: 'Trirong', sans-serif;}</style>
+                    <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Kodchasan'); @font-face{font-family: 'Kodchasan', sans-serif;}</style>
                 """, at: headStart)
             }
             
