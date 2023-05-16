@@ -64,6 +64,7 @@ final class EPUBHTMLInjector {
                 content = content.insert(string: """
                     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0;"/>
                     <style type="text/css">@font-face{font-family: "OpenDyslexic"; src:url("/fonts/OpenDyslexic-Regular.otf") format("opentype");}</style>
+                    <style type="text/css">@font-face{font-family: "THSarabunNew"; src:url("/fonts/THSarabunNew-Regular.ttf") format("truetype"), url("/fonts/THSarabunNew-Italic.ttf") format("truetype"), url("/fonts/THSarabunNew-BoldItalic.ttf") format("truetype"), url("/fonts/THSarabunNew-Bold.ttf") format("truetype");}</style>
                     <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Sarabun'); @font-face{font-family: 'Sarabun', sans-serif;}</style>
                     <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch'); @font-face{font-family: 'Chakra Petch', sans-serif;}</style>
                     <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Mali'); @font-face{font-family: 'Mali', sans-serif;}</style>
