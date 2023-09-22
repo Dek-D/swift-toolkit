@@ -18,8 +18,9 @@ public class UserSettings {
     
     // WARNING: String values must not contain any single or double quotes characters, otherwise it breaks the streamer's injection.
     private let appearanceValues = ["readium-default-on", "readium-sepia-on","readium-night-on"]
-    private let fontFamilyValues = ["Sarabun", "Chakra Petch", "Mali", "Maitree", "Taviraj", "Trirong", "Kodchasan"]
+    // we will append new font at the last to keep old user's font setting
     private let textAlignmentValues = ["justify", "start"]
+    private let fontFamilyValues = ["Sarabun", "Chakra Petch", "Mali", "Maitree", "Taviraj", "Trirong", "Kodchasan", "THSarabunNew"]
     private let columnCountValues = ["auto", "1", "2"]
     
     private var fontSize: Float
