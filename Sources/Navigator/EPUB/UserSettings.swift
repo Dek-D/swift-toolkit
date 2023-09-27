@@ -1,12 +1,7 @@
 //
-//  UserSettings.swift
-//  r2-navigator-swift
-//
-//  Created by Alexandre Camilleri on 8/25/17.
-//
-//  Copyright 2018 Readium Foundation. All rights reserved.
-//  Use of this source code is governed by a BSD-style license which is detailed
-//  in the LICENSE file present in the project repository where this source code is maintained.
+//  Copyright 2023 Readium Foundation. All rights reserved.
+//  Use of this source code is governed by the BSD-style license
+//  available in the top-level LICENSE file of the project.
 //
 
 import Foundation
@@ -15,13 +10,12 @@ import UIKit
 import R2Shared
 
 public class UserSettings {
-    
     // WARNING: String values must not contain any single or double quotes characters, otherwise it breaks the streamer's injection.
-    private let appearanceValues = ["readium-default-on", "readium-sepia-on","readium-night-on"]
+    static let appearanceValues = ["readium-default-on", "readium-sepia-on","readium-night-on"]
     // we will append new font at the last to keep old user's font setting
-    private let textAlignmentValues = ["justify", "start"]
-    private let fontFamilyValues = ["Sarabun", "Chakra Petch", "Mali", "Maitree", "Taviraj", "Trirong", "Kodchasan", "THSarabunNew"]
-    private let columnCountValues = ["auto", "1", "2"]
+    static let textAlignmentValues = ["justify", "start"]
+    static let fontFamilyValues = ["Sarabun", "Chakra Petch", "Mali", "Maitree", "Taviraj", "Trirong", "Kodchasan", "THSarabunNew"]
+    static let columnCountValues = ["auto", "1", "2"]
     
     private var fontSize: Float
     private var fontOverride: Bool
@@ -29,7 +23,7 @@ public class UserSettings {
     private var appearance: Int
     private var verticalScroll: Bool
     private var hyphens: Bool
-    
+
     private var publisherDefaults: Bool
     private var textAlignment: Int
     private var columnCount: Int
@@ -41,9 +35,9 @@ public class UserSettings {
 
     private var textColor: String?
     private var backgroundColor: String?
-    
+
     public let userProperties = UserProperties()
-    
+
     private let userDefaults = UserDefaults.standard
 
     /// Designated initializer.
@@ -101,21 +95,20 @@ public class UserSettings {
         textColor: String? = nil,
         backgroundColor: String? = nil
     ) {
-
         /// Check if a given key is set in the UserDefaults.
         func isKeyPresentInUserDefaults(key: ReadiumCSSName) -> Bool {
             UserDefaults.standard.object(forKey: key.rawValue) != nil
         }
 
         /// Load settings from UserDefaults
-        
+
         // hyphens
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.hyphens) {
             self.hyphens = userDefaults.bool(forKey: ReadiumCSSName.hyphens.rawValue)
         } else {
             self.hyphens = hyphens
         }
-        
+
         // Font size
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.fontSize) {
             self.fontSize = userDefaults.float(forKey: ReadiumCSSName.fontSize.rawValue)
@@ -129,77 +122,77 @@ public class UserSettings {
         } else {
             self.fontFamily = fontFamily
         }
-        
+
         // Font override
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.fontOverride) {
-            self.fontOverride = userDefaults.bool(forKey: ReadiumCSSName.fontOverride.rawValue)
+            fontOverride = userDefaults.bool(forKey: ReadiumCSSName.fontOverride.rawValue)
         } else {
-            self.fontOverride = (fontFamily != 0)
+            fontOverride = (fontFamily != 0)
         }
-        
+
         // Appearance
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.appearance) {
             self.appearance = userDefaults.integer(forKey: ReadiumCSSName.appearance.rawValue)
         } else {
             self.appearance = appearance
         }
-        
+
         // Vertical scroll
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.scroll) {
             self.verticalScroll = userDefaults.bool(forKey: ReadiumCSSName.scroll.rawValue)
         } else {
             self.verticalScroll = verticalScroll
         }
-        
+
         // Publisher default system
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.publisherDefault) {
             self.publisherDefaults = userDefaults.bool(forKey: ReadiumCSSName.publisherDefault.rawValue)
         } else {
             self.publisherDefaults = publisherDefaults
         }
-        
+
         // Text alignment
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.textAlignment) {
             self.textAlignment = userDefaults.integer(forKey: ReadiumCSSName.textAlignment.rawValue)
         } else {
             self.textAlignment = textAlignment
         }
-        
+
         // Column count
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.columnCount) {
             self.columnCount = userDefaults.integer(forKey: ReadiumCSSName.columnCount.rawValue)
         } else {
             self.columnCount = columnCount
         }
-        
+
         // Word spacing
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.wordSpacing) {
             self.wordSpacing = userDefaults.float(forKey: ReadiumCSSName.wordSpacing.rawValue)
         } else {
             self.wordSpacing = wordSpacing
         }
-        
+
         // Letter spacing
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.letterSpacing) {
             self.letterSpacing = userDefaults.float(forKey: ReadiumCSSName.letterSpacing.rawValue)
         } else {
             self.letterSpacing = letterSpacing
         }
-        
+
         // Page margins
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.pageMargins) {
             self.pageMargins = userDefaults.float(forKey: ReadiumCSSName.pageMargins.rawValue)
         } else {
             self.pageMargins = pageMargins
         }
-        
+
         // Line height
         if isKeyPresentInUserDefaults(key: ReadiumCSSName.lineHeight) {
             self.lineHeight = userDefaults.float(forKey: ReadiumCSSName.lineHeight.rawValue)
         } else {
             self.lineHeight = lineHeight
         }
-        
+
         // Paragraph Margins
         // A nil `paragraphMargins` input parameter provides a way for client
         // apps to opt out of setting a value for paragraph spacing, which is
@@ -229,19 +222,17 @@ public class UserSettings {
         }
 
         buildCssProperties()
-        
     }
-    
+
     // Build and add CSS properties
     private func buildCssProperties() {
-        
         // Hyphens
         userProperties.addSwitchable(onValue: "auto",
                                      offValue: "none",
                                      on: hyphens,
                                      reference: ReadiumCSSReference.hyphens.rawValue,
                                      name: ReadiumCSSName.hyphens.rawValue)
-        
+
         // Font size
         userProperties.addIncrementable(nValue: fontSize,
                                         min: 100,
@@ -250,52 +241,52 @@ public class UserSettings {
                                         suffix: "%",
                                         reference: ReadiumCSSReference.fontSize.rawValue,
                                         name: ReadiumCSSName.fontSize.rawValue)
-        
+
         // Font family
         userProperties.addEnumerable(index: fontFamily,
-                                     values: fontFamilyValues,
+                                     values: Self.fontFamilyValues,
                                      reference: ReadiumCSSReference.fontFamily.rawValue,
                                      name: ReadiumCSSName.fontFamily.rawValue)
-        
+
         // Font override
         userProperties.addSwitchable(onValue: "readium-font-on",
                                      offValue: "readium-font-off",
                                      on: fontOverride,
                                      reference: ReadiumCSSReference.fontOverride.rawValue,
                                      name: ReadiumCSSName.fontOverride.rawValue)
-        
+
         // Appearance
         userProperties.addEnumerable(index: appearance,
-                                     values: appearanceValues,
+                                     values: Self.appearanceValues,
                                      reference: ReadiumCSSReference.appearance.rawValue,
                                      name: ReadiumCSSName.appearance.rawValue)
-        
+
         // Vertical scroll
         userProperties.addSwitchable(onValue: "readium-scroll-on",
                                      offValue: "readium-scroll-off",
                                      on: verticalScroll,
                                      reference: ReadiumCSSReference.scroll.rawValue,
                                      name: ReadiumCSSName.scroll.rawValue)
-        
+
         // Publisher default system
         userProperties.addSwitchable(onValue: "readium-advanced-off",
                                      offValue: "readium-advanced-on",
                                      on: publisherDefaults,
                                      reference: ReadiumCSSReference.publisherDefault.rawValue,
                                      name: ReadiumCSSName.publisherDefault.rawValue)
-        
+
         // Text alignment
         userProperties.addEnumerable(index: textAlignment,
-                                     values: textAlignmentValues,
+                                     values: Self.textAlignmentValues,
                                      reference: ReadiumCSSReference.textAlignment.rawValue,
                                      name: ReadiumCSSName.textAlignment.rawValue)
-        
+
         // Column count
         userProperties.addEnumerable(index: columnCount,
-                                     values: columnCountValues,
+                                     values: Self.columnCountValues,
                                      reference: ReadiumCSSReference.columnCount.rawValue,
                                      name: ReadiumCSSName.columnCount.rawValue)
-        
+
         // Word spacing
         userProperties.addIncrementable(nValue: wordSpacing,
                                         min: 0,
@@ -304,7 +295,7 @@ public class UserSettings {
                                         suffix: "rem",
                                         reference: ReadiumCSSReference.wordSpacing.rawValue,
                                         name: ReadiumCSSName.wordSpacing.rawValue)
-        
+
         // Letter spacing
         userProperties.addIncrementable(nValue: letterSpacing,
                                         min: 0,
@@ -313,7 +304,7 @@ public class UserSettings {
                                         suffix: "em",
                                         reference: ReadiumCSSReference.letterSpacing.rawValue,
                                         name: ReadiumCSSName.letterSpacing.rawValue)
-        
+
         // Page margins
         userProperties.addIncrementable(nValue: pageMargins,
                                         min: 0.5,
@@ -322,7 +313,7 @@ public class UserSettings {
                                         suffix: "",
                                         reference: ReadiumCSSReference.pageMargins.rawValue,
                                         name: ReadiumCSSName.pageMargins.rawValue)
-        
+
         // Line height
         userProperties.addIncrementable(nValue: lineHeight,
                                         min: 1,
@@ -331,7 +322,7 @@ public class UserSettings {
                                         suffix: "",
                                         reference: ReadiumCSSReference.lineHeight.rawValue,
                                         name: ReadiumCSSName.lineHeight.rawValue)
-        
+
         // Paragraph margins
         if let paragraphMargins = paragraphMargins {
             userProperties.addIncrementable(nValue: paragraphMargins,
@@ -361,32 +352,31 @@ public class UserSettings {
             )
         }
     }
-    
+
     // Save settings to UserDefaults
     public func save() {
-        
         let userDefaults = UserDefaults.standard
 
         if let currentfontSize = userProperties.getProperty(reference: ReadiumCSSReference.fontSize.rawValue) as? Incrementable {
             userDefaults.set(currentfontSize.value, forKey: ReadiumCSSName.fontSize.rawValue)
         }
-        
+
         if let currentfontFamily = userProperties.getProperty(reference: ReadiumCSSReference.fontFamily.rawValue) as? Enumerable {
             userDefaults.set(currentfontFamily.index, forKey: ReadiumCSSName.fontFamily.rawValue)
         }
-        
+
         if let currentfontOverride = userProperties.getProperty(reference: ReadiumCSSReference.fontOverride.rawValue) as? Switchable {
             userDefaults.set(currentfontOverride.on, forKey: ReadiumCSSName.fontOverride.rawValue)
         }
-        
+
         if let currentAppearance = userProperties.getProperty(reference: ReadiumCSSReference.appearance.rawValue) as? Enumerable {
             userDefaults.set(currentAppearance.index, forKey: ReadiumCSSName.appearance.rawValue)
         }
-        
+
         if let currentVerticalScroll = userProperties.getProperty(reference: ReadiumCSSReference.scroll.rawValue) as? Switchable {
             userDefaults.set(currentVerticalScroll.on, forKey: ReadiumCSSName.scroll.rawValue)
         }
-        
+
         if let currentPublisherDefaults = userProperties.getProperty(reference: ReadiumCSSReference.publisherDefault.rawValue) as? Switchable {
             userDefaults.set(currentPublisherDefaults.on, forKey: ReadiumCSSName.publisherDefault.rawValue)
         }
@@ -394,23 +384,23 @@ public class UserSettings {
         if let currentTextAlignment = userProperties.getProperty(reference: ReadiumCSSReference.textAlignment.rawValue) as? Enumerable {
             userDefaults.set(currentTextAlignment.index, forKey: ReadiumCSSName.textAlignment.rawValue)
         }
-        
+
         if let currentColumnCount = userProperties.getProperty(reference: ReadiumCSSReference.columnCount.rawValue) as? Enumerable {
             userDefaults.set(currentColumnCount.index, forKey: ReadiumCSSName.columnCount.rawValue)
         }
-        
+
         if let currentWordSpacing = userProperties.getProperty(reference: ReadiumCSSReference.wordSpacing.rawValue) as? Incrementable {
             userDefaults.set(currentWordSpacing.value, forKey: ReadiumCSSName.wordSpacing.rawValue)
         }
-        
+
         if let currentLetterSpacing = userProperties.getProperty(reference: ReadiumCSSReference.letterSpacing.rawValue) as? Incrementable {
             userDefaults.set(currentLetterSpacing.value, forKey: ReadiumCSSName.letterSpacing.rawValue)
         }
-        
+
         if let currentPageMargins = userProperties.getProperty(reference: ReadiumCSSReference.pageMargins.rawValue) as? Incrementable {
             userDefaults.set(currentPageMargins.value, forKey: ReadiumCSSName.pageMargins.rawValue)
         }
-        
+
         if let currentLineHeight = userProperties.getProperty(reference: ReadiumCSSReference.lineHeight.rawValue) as? Incrementable {
             userDefaults.set(currentLineHeight.value, forKey: ReadiumCSSName.lineHeight.rawValue)
         }
@@ -431,5 +421,4 @@ public class UserSettings {
             userDefaults.removeObject(forKey: ReadiumCSSName.backgroundColor.rawValue)
         }
     }
-
 }
