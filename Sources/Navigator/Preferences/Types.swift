@@ -1,5 +1,5 @@
 //
-//  Copyright 2023 Readium Foundation. All rights reserved.
+//  Copyright 2024 Readium Foundation. All rights reserved.
 //  Use of this source code is governed by the BSD-style license
 //  available in the top-level LICENSE file of the project.
 //
@@ -110,7 +110,7 @@ public enum Theme: String, Codable, Hashable {
     private static let nightBackgroundColor = Color(hex: "#000000")!
     // https://github.com/readium/readium-css/blob/master/css/src/modules/ReadiumCSS-sepia_mode.css
     private static let sepiaContentColor = Color(hex: "#121212")!
-    private static let sepiaBackgroundColor = Color(hex: "#faf4e8")!
+    private static let sepiaBackgroundColor = Color(hex: "#f5efdc")!
 }
 
 /// Number of columns displayed in a reflowable document.

@@ -317,7 +317,7 @@ body {
 /* CONFIG */
 
 :root[style*="readium-sepia-on"] {
-  --RS__backgroundColor: #faf4e8;
+  --RS__backgroundColor: #f5efdc;
   --RS__textColor: #121212;
 
   --RS__linkColor: #0000EE;
