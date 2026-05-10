@@ -869,6 +869,7 @@ open class EPUBNavigatorViewController: UIViewController,
         }
 
         view.backgroundColor = settings.effectiveBackgroundColor.uiColor
+        paginationView.isVerticalChapterTransition = settings.scroll && !settings.verticalText
     }
 
     // MARK: - User interactions
@@ -1149,6 +1150,15 @@ extension EPUBNavigatorViewController: EPUBSpreadViewDelegate {
 
     func spreadViewDidTerminate() {
         reloadSpreads(force: true)
+    }
+
+    func spreadView(_ spreadView: EPUBSpreadView, didRequestChapterNavigationForward forward: Bool) {
+        guard !paginationView.isAnimatingChapterTransition else { return }
+        if forward {
+            _ = goForward(animated: true, completion: {})
+        } else {
+            _ = goBackward(animated: true, completion: {})
+        }
     }
 }
 
