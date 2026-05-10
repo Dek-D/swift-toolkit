@@ -41,6 +41,9 @@ protocol EPUBSpreadViewDelegate: AnyObject {
 
     /// Called when WKWebview terminates
     func spreadViewDidTerminate()
+
+    /// Called when the user scrolls past the edge of the chapter in scroll mode.
+    func spreadView(_ spreadView: EPUBSpreadView, didRequestChapterNavigationForward forward: Bool)
 }
 
 class EPUBSpreadView: UIView, Loggable, PageView {
