@@ -334,7 +334,7 @@ final class PaginationView: UIView, Loggable {
             return
         }
 
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
         setCurrentIndex(index, location: location, completion: completion)
 
         scrollView.scrollRectToVisible(CGRect(
@@ -416,17 +416,17 @@ extension PaginationView: UIScrollViewDelegate {
     }
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            scrollView.isScrollEnabled = true
+            scrollView.isScrollEnabled = !isVerticalChapterTransition
         }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
 
         let currentOffset = (readingProgression == .rtl)
             ? scrollView.contentSize.width - (scrollView.contentOffset.x + scrollView.frame.width)
