@@ -402,12 +402,17 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         guard viewModel.scroll else { return }
 
         let insets = scrollView.contentInset
-        let atBottom = scrollView.contentOffset.y + scrollView.bounds.height >= scrollView.contentSize.height + insets.bottom - 1
-        let atTop = scrollView.contentOffset.y <= -insets.top + 1
+        let minOffset = -insets.top
+        let maxOffset = scrollView.contentSize.height - scrollView.bounds.height + insets.bottom
+        let edgeTolerance: CGFloat = 1
+        let velocityThreshold: CGFloat = 1
 
-        if atBottom && velocity.y > 1.0 {
+        let atTop = scrollView.contentOffset.y <= minOffset + edgeTolerance
+        let atBottom = scrollView.contentOffset.y >= maxOffset - edgeTolerance
+
+        if atBottom && velocity.y > velocityThreshold {
             delegate?.spreadView(self, didRequestChapterNavigationForward: true)
-        } else if atTop && velocity.y < -1.0 {
+        } else if atTop && velocity.y < -velocityThreshold {
             delegate?.spreadView(self, didRequestChapterNavigationForward: false)
         }
     }
