@@ -362,39 +362,39 @@ final class PaginationView: UIView, Loggable {
     var isAnimatingChapterTransition = false
 
     private func navigateVertically(to index: Int, location: PageLocation, completion: @escaping () -> Void = {}) {
+        guard !isAnimatingChapterTransition else {
+            completion()
+            return
+        }
         isAnimatingChapterTransition = true
 
-        let height = bounds.height
         let isForward = location != .end
+        let height = bounds.height
         let slideOutY: CGFloat = isForward ? -height : height
         let slideInY: CGFloat = isForward ? height : -height
 
         let snapshot = snapshotView(afterScreenUpdates: false)
         snapshot?.frame = bounds
-        if let snapshot = snapshot { addSubview(snapshot) }
+        if let snapshot { addSubview(snapshot) }
 
-        // New chapter loads off-screen behind the snapshot.
         scrollView.transform = CGAffineTransform(translationX: 0, y: slideInY)
 
-        // Phase 1: slide out current content immediately — no waiting.
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
             snapshot?.transform = CGAffineTransform(translationX: 0, y: slideOutY)
         }
 
-        // Phase 2: slide in new chapter as soon as it finishes loading.
         setCurrentIndex(index, location: location) { [weak self] in
-            guard let self = self else { return }
+            guard let self else {
+                completion()
+                return
+            }
             UIView.animate(
                 withDuration: 0.25,
                 delay: 0,
                 usingSpringWithDamping: 1.0,
                 initialSpringVelocity: 0.8,
-                options: [],
-                animations: {
-                    self.scrollView.transform = .identity
-                },
-                completion: { [weak self] _ in
-                    guard let self = self else { return }
+                animations: { self.scrollView.transform = .identity },
+                completion: { _ in
                     snapshot?.removeFromSuperview()
                     self.isAnimatingChapterTransition = false
                     completion()
