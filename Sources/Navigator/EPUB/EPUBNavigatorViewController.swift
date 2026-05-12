@@ -1155,9 +1155,9 @@ extension EPUBNavigatorViewController: EPUBSpreadViewDelegate {
     func spreadView(_ spreadView: EPUBSpreadView, didRequestChapterNavigationForward forward: Bool) {
         guard !paginationView.isAnimatingChapterTransition else { return }
         if forward {
-            _ = goForward(animated: true, completion: {})
+            goForward(animated: true)
         } else {
-            _ = goBackward(animated: true, completion: {})
+            goBackward(animated: true)
         }
     }
 }
