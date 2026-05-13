@@ -297,6 +297,8 @@ final class PaginationView: UIView, Loggable {
 
         if currentIndex == index {
             scrollToView(at: index, location: location, completion: completion)
+        } else if isVerticalChapterTransition && animated {
+            navigateVertically(to: index, location: location, completion: completion)
         } else {
             fadeToView(at: index, location: location, animated: animated, completion: completion)
         }
@@ -332,7 +334,7 @@ final class PaginationView: UIView, Loggable {
             return
         }
 
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
         setCurrentIndex(index, location: location, completion: completion)
 
         scrollView.scrollRectToVisible(CGRect(
@@ -342,6 +344,63 @@ final class PaginationView: UIView, Loggable {
             ),
             size: scrollView.frame.size
         ), animated: false)
+    }
+
+    // MARK: - Vertical Chapter Transition
+
+    /// When true, chapter-to-chapter transitions use a vertical slide animation
+    /// (scroll == true && verticalText == false).
+    var isVerticalChapterTransition: Bool = false {
+        didSet {
+            guard oldValue != isVerticalChapterTransition else { return }
+            // Disable horizontal paging scroll when in vertical scroll mode so
+            // the WebView's own scroll view handles all touch input.
+            scrollView.isScrollEnabled = !isVerticalChapterTransition
+        }
+    }
+
+    var isAnimatingChapterTransition = false
+
+    private func navigateVertically(to index: Int, location: PageLocation, completion: @escaping () -> Void = {}) {
+        guard !isAnimatingChapterTransition else {
+            completion()
+            return
+        }
+        isAnimatingChapterTransition = true
+
+        let isForward = location != .end
+        let height = bounds.height
+        let slideOutY: CGFloat = isForward ? -height : height
+        let slideInY: CGFloat = isForward ? height : -height
+
+        let snapshot = snapshotView(afterScreenUpdates: false)
+        snapshot?.frame = bounds
+        if let snapshot { addSubview(snapshot) }
+
+        scrollView.transform = CGAffineTransform(translationX: 0, y: slideInY)
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+            snapshot?.transform = CGAffineTransform(translationX: 0, y: slideOutY)
+        }
+
+        setCurrentIndex(index, location: location) { [weak self] in
+            guard let self else {
+                completion()
+                return
+            }
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                usingSpringWithDamping: 1.0,
+                initialSpringVelocity: 0.8,
+                animations: { self.scrollView.transform = .identity },
+                completion: { _ in
+                    snapshot?.removeFromSuperview()
+                    self.isAnimatingChapterTransition = false
+                    completion()
+                }
+            )
+        }
     }
 }
 
@@ -357,17 +416,17 @@ extension PaginationView: UIScrollViewDelegate {
     }
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            scrollView.isScrollEnabled = true
+            scrollView.isScrollEnabled = !isVerticalChapterTransition
         }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = true
+        scrollView.isScrollEnabled = !isVerticalChapterTransition
 
         let currentOffset = (readingProgression == .rtl)
             ? scrollView.contentSize.width - (scrollView.contentOffset.x + scrollView.frame.width)

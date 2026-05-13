@@ -397,6 +397,25 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(notifyPagesDidChange), object: nil)
         perform(#selector(notifyPagesDidChange), with: nil, afterDelay: 0.3)
     }
+
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard viewModel.scroll else { return }
+
+        let insets = scrollView.contentInset
+        let minOffset = -insets.top
+        let maxOffset = scrollView.contentSize.height - scrollView.bounds.height + insets.bottom
+        let edgeTolerance: CGFloat = 1
+        let velocityThreshold: CGFloat = 1
+
+        let atTop = scrollView.contentOffset.y <= minOffset + edgeTolerance
+        let atBottom = scrollView.contentOffset.y >= maxOffset - edgeTolerance
+
+        if atBottom && velocity.y > velocityThreshold {
+            delegate?.spreadView(self, didRequestChapterNavigationForward: true)
+        } else if atTop && velocity.y < -velocityThreshold {
+            delegate?.spreadView(self, didRequestChapterNavigationForward: false)
+        }
+    }
 }
 
 /// Determines the Readium CSS stylesheets to use depending on the publication languages and
