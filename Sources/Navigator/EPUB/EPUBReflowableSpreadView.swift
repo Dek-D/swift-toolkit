@@ -402,8 +402,17 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         let edgeTolerance: CGFloat = 1
         let velocityThreshold: CGFloat = 1
 
-        let atTop = scrollView.contentOffset.y <= minOffset + edgeTolerance
-        let atBottom = scrollView.contentOffset.y >= maxOffset - edgeTolerance
+        // For short/full-screen pages (e.g. cover images), the scrollable range is tiny
+        // (only safe-area insets ~78pt). The user releases before contentOffset reaches
+        // maxOffset, so use targetContentOffset (post-deceleration) instead of the live
+        // offset for these pages; keep the live offset for normal long chapters.
+        let scrollableRange = maxOffset - minOffset
+        let referenceY = scrollableRange < scrollView.bounds.height / 2
+            ? targetContentOffset.pointee.y
+            : scrollView.contentOffset.y
+
+        let atTop = referenceY <= minOffset + edgeTolerance
+        let atBottom = referenceY >= maxOffset - edgeTolerance
 
         if atBottom && velocity.y > velocityThreshold {
             delegate?.spreadView(self, didRequestChapterNavigationForward: true)
