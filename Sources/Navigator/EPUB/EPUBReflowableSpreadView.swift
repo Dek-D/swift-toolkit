@@ -92,6 +92,10 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         // Disables paginated mode if scroll is on.
         scrollView.isPagingEnabled = !viewModel.scroll
 
+        let verticalChapterNavigation = viewModel.scroll && !viewModel.settings.verticalText
+        scrollView.bounces = verticalChapterNavigation
+        scrollView.alwaysBounceVertical = verticalChapterNavigation
+
         updateContentInset()
     }
 
