@@ -92,6 +92,10 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         // Disables paginated mode if scroll is on.
         scrollView.isPagingEnabled = !viewModel.scroll
 
+        let verticalChapterNavigation = viewModel.scroll && !viewModel.settings.verticalText
+        scrollView.bounces = verticalChapterNavigation
+        scrollView.alwaysBounceVertical = verticalChapterNavigation
+
         updateContentInset()
     }
 
@@ -387,6 +391,34 @@ final class EPUBReflowableSpreadView: EPUBSpreadView {
         // ie. https://stackoverflow.com/a/1857162/1474476
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(notifyPagesDidChange), object: nil)
         perform(#selector(notifyPagesDidChange), with: nil, afterDelay: 0.3)
+    }
+
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard viewModel.scroll else { return }
+
+        let insets = scrollView.contentInset
+        let minOffset = -insets.top
+        let maxOffset = scrollView.contentSize.height - scrollView.bounds.height + insets.bottom
+        let edgeTolerance: CGFloat = 1
+        let velocityThreshold: CGFloat = 1
+
+        // For short/full-screen pages (e.g. cover images), the scrollable range is tiny
+        // (only safe-area insets ~78pt). The user releases before contentOffset reaches
+        // maxOffset, so use targetContentOffset (post-deceleration) instead of the live
+        // offset for these pages; keep the live offset for normal long chapters.
+        let scrollableRange = maxOffset - minOffset
+        let referenceY = scrollableRange < scrollView.bounds.height / 2
+            ? targetContentOffset.pointee.y
+            : scrollView.contentOffset.y
+
+        let atTop = referenceY <= minOffset + edgeTolerance
+        let atBottom = referenceY >= maxOffset - edgeTolerance
+
+        if atBottom && velocity.y > velocityThreshold {
+            delegate?.spreadView(self, didRequestChapterNavigationForward: true)
+        } else if atTop && velocity.y < -velocityThreshold {
+            delegate?.spreadView(self, didRequestChapterNavigationForward: false)
+        }
     }
 }
 
