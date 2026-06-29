@@ -15,6 +15,11 @@ public protocol EPUBNavigatorDelegate: VisualNavigatorDelegate, SelectableNaviga
 
     func navigator(_ navigator: EPUBNavigatorViewController, setupUserScripts userContentController: WKUserContentController)
 
+    // MARK: - Image Tap
+
+    /// Called when the user taps on an image in the EPUB content.
+    func navigator(_ navigator: EPUBNavigatorViewController, didTapImageAt url: URL)
+
     // MARK: - Deprecated
 
     // Implement `NavigatorDelegate.navigator(didTapAt:)` instead.
@@ -31,6 +36,7 @@ public protocol EPUBNavigatorDelegate: VisualNavigatorDelegate, SelectableNaviga
 
 public extension EPUBNavigatorDelegate {
     func navigator(_ navigator: EPUBNavigatorViewController, setupUserScripts userContentController: WKUserContentController) {}
+    func navigator(_ navigator: EPUBNavigatorViewController, didTapImageAt url: URL) {}
 
     func middleTapHandler() {}
     func willExitPublication(documentIndex: Int, progression: Double?) {}
@@ -1023,6 +1029,10 @@ extension EPUBNavigatorViewController: EPUBSpreadViewDelegate {
 
     func spreadView(_ spreadView: EPUBSpreadView, didReleaseKey event: KeyEvent) {
         delegate?.navigator(self, didReleaseKey: event)
+    }
+
+    func spreadView(_ spreadView: EPUBSpreadView, didTapOnImage url: URL) {
+        delegate?.navigator(self, didTapImageAt: url)
     }
 
     func spreadView(_ spreadView: EPUBSpreadView, didTapOnExternalURL url: URL) {

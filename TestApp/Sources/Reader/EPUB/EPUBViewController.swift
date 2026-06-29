@@ -159,6 +159,11 @@ extension EPUBViewController: EPUBNavigatorDelegate {
     func navigator(_ navigator: Navigator, shouldNavigateToNoteAt link: R2Shared.Link, content: String, referrer: String?) -> Bool {
         presentFootnote(content: content, referrer: referrer)
     }
+
+    func navigator(_ navigator: EPUBNavigatorViewController, didTapImageAt url: URL) {
+        let viewer = ImageViewerViewController(imageURL: url)
+        present(viewer, animated: true)
+    }
 }
 
 extension EPUBViewController: UIGestureRecognizerDelegate {

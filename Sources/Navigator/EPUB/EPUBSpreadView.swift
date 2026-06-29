@@ -15,6 +15,9 @@ protocol EPUBSpreadViewDelegate: AnyObject {
     /// Called when the user tapped on the spread contents.
     func spreadView(_ spreadView: EPUBSpreadView, didTapAt point: CGPoint)
 
+    /// Called when the user tapped on an image.
+    func spreadView(_ spreadView: EPUBSpreadView, didTapOnImage url: URL)
+
     /// Called when the user tapped on an external link.
     func spreadView(_ spreadView: EPUBSpreadView, didTapOnExternalURL url: URL)
 
@@ -205,6 +208,15 @@ class EPUBSpreadView: UIView, Loggable, PageView {
         }
     }
 
+    private func didTapImage(_ data: Any) {
+        guard
+            let dict = data as? [String: Any],
+            let src = dict["src"] as? String,
+            let imageURL = URL(string: src)
+        else { return }
+        delegate?.spreadView(self, didTapOnImage: imageURL)
+    }
+
     /// Converts the given JavaScript point into a point in the webview's coordinate space.
     func convertPointToNavigatorSpace(_ point: CGPoint) -> CGPoint {
         // To override in subclasses.
@@ -349,6 +361,7 @@ class EPUBSpreadView: UIView, Loggable, PageView {
         registerJSMessage(named: "log") { [weak self] in self?.didLog($0) }
         registerJSMessage(named: "logError") { [weak self] in self?.didLogError($0) }
         registerJSMessage(named: "tap") { [weak self] in self?.didTap($0) }
+        registerJSMessage(named: "imageTap") { [weak self] in self?.didTapImage($0) }
         registerJSMessage(named: "spreadLoadStarted") { [weak self] in self?.spreadLoadDidStart($0) }
         registerJSMessage(named: "spreadLoaded") { [weak self] in self?.spreadDidLoad($0) }
         registerJSMessage(named: "selectionChanged") { [weak self] in self?.selectionDidChange($0) }
