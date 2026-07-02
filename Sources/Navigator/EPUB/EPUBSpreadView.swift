@@ -211,9 +211,20 @@ class EPUBSpreadView: UIView, Loggable, PageView {
     private func didTapImage(_ data: Any) {
         guard
             let dict = data as? [String: Any],
-            let src = dict["src"] as? String,
-            let imageURL = URL(string: src)
+            let src = dict["src"] as? String
         else { return }
+
+        guard let imageURL = URL(string: src) else {
+            // The JS layer already swallowed this tap assuming it would be handled as an image.
+            // Since the URL couldn't be resolved, fall back to normal tap handling (e.g. toolbar
+            // toggle) instead of leaving the tap with no effect at all.
+            let point = convertPointToNavigatorSpace(
+                CGPoint(x: dict["x"] as? Double ?? 0, y: dict["y"] as? Double ?? 0)
+            )
+            delegate?.spreadView(self, didTapAt: point)
+            return
+        }
+
         delegate?.spreadView(self, didTapOnImage: imageURL)
     }
 

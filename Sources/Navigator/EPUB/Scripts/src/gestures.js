@@ -29,7 +29,6 @@ function onClick(event) {
     let point = adjustPointToViewport({ x: event.clientX, y: event.clientY });
     webkit.messageHandlers.imageTap.postMessage({
       src: imgElement.src,
-      alt: imgElement.alt || "",
       x: point.x,
       y: point.y,
     });
