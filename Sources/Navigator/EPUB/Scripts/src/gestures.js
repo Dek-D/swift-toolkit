@@ -21,6 +21,20 @@ function onClick(event) {
     return;
   }
 
+  // Handle tap on image elements.
+  const imgElement = event.target.closest("img");
+  if (imgElement) {
+    event.stopPropagation();
+    event.preventDefault();
+    let point = adjustPointToViewport({ x: event.clientX, y: event.clientY });
+    webkit.messageHandlers.imageTap.postMessage({
+      src: imgElement.src,
+      x: point.x,
+      y: point.y,
+    });
+    return;
+  }
+
   let point = adjustPointToViewport({ x: event.clientX, y: event.clientY });
   let clickEvent = {
     defaultPrevented: event.defaultPrevented,
